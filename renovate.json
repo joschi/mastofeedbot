@@ -8,5 +8,8 @@
   ],
   "npm": {
     "stabilityDays": 3
-  }
+  },
+  "schedule": [
+    "before 2am"
+  ]
 }
