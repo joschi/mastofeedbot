@@ -23,7 +23,26 @@ async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]
   }
 }
 
-async function postItems(apiEndpoint: string, apiToken: string, rss: FeedEntry[], visibility: StatusVisibility, cache: string[]) {
+async function postItems(
+  apiEndpoint: string, apiToken: string, rss: FeedEntry[], 
+  visibility: StatusVisibility, dryRun: boolean, cache: string[]) {
+  if (dryRun) {
+    // Add new items to cache
+    for (const item of rss) {
+      try {
+        const hash = <string>new SHA256Hash().hash(<string>item.link);
+        core.debug(`Adding ${item.title} with hash ${hash} to cache`);
+
+        // add the item to the cache
+        cache.push(hash);
+      } catch (e) {
+        core.setFailed(`Failed to ad item to cache: ${(<Error>e).message}`);
+      }
+    }
+
+    return;
+  }
+
   // authenticate with mastodon
   let masto: MastoClient;
   try {
@@ -105,6 +124,8 @@ export async function main(): Promise<void> {
   core.debug(`cacheLimit: ${cacheLimit}`);
   const statusVisibility: StatusVisibility = <StatusVisibility>core.getInput('status-visibility', { trimWhitespace: true });
   core.debug(`statusVisibility: ${statusVisibility}`);
+  const dryRun: boolean = core.getBooleanInput('dry-run');
+  core.debug(`dryRun: ${dryRun}`);
 
   // get the rss feed
   let rss = await getRss(rssFeed);
@@ -116,7 +137,7 @@ export async function main(): Promise<void> {
   rss = await filterCachedItems(<FeedEntry[]>rss, cache);
 
   // post the new items
-  await postItems(apiEndpoint, apiToken, <FeedEntry[]>rss, statusVisibility, cache);
+  await postItems(apiEndpoint, apiToken, <FeedEntry[]>rss, statusVisibility, dryRun, cache);
 
   // write the cache
   await writeCache(cacheFile, cacheLimit, cache);
