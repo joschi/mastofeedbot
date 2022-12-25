@@ -11,24 +11,24 @@ jobs:
       pull-requests: read
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
         with:
           fetch-depth: 0
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2
         with:
           node-version: 16
 
       - name: Check package version
         id: check
-        uses: 'EndBug/version-check@v1'
+        uses: 'EndBug/version-check@eea9dab124be9214bd32356f32f7d8945173db13' # v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           diff-search: true
 
       - name: Create release
-        uses: 'zendesk/action-create-release@v1'
+        uses: 'zendesk/action-create-release@d690a6dcc904617a6ef45f845114e6e3d9f1b0af' # v1
         if: ${{ steps.check.outputs.changed == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
