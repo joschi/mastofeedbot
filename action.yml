@@ -1,6 +1,6 @@
-name: 'MastoFeedBot'
+name: 'Feed to Mastodon'
 author: 'selfagency'
-description: 'Push RSS feed updates to Mastodon via GitHub Actions'
+description: 'Push ATOM/RSS feed updates to Mastodon via GitHub Actions'
 branding:
   icon: 'rss'
   color: 'orange'
