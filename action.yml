@@ -12,6 +12,10 @@ inputs:
     description: 'Visibility of the posted status (public | unlisted | private | direct)'
     required: false
     default: 'public'
+  dry-run:
+    description: 'Only fetch RSS feed and update cache but skip posting to Mastodon.'
+    required: false
+    default: 'false'
   cache-file:
     description: 'Cache file'
     required: true
