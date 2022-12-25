@@ -22,7 +22,7 @@ jobs:
 
       - name: Check package version
         id: check
-        uses: 'EndBug/version-check@eea9dab124be9214bd32356f32f7d8945173db13' # v1
+        uses: 'EndBug/version-check@323ba664f1d777a793dd0e570bdb4116665808ad' # v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           diff-search: true
