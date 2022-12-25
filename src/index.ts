@@ -1,9 +1,13 @@
 import { login, StatusVisibility, type MastoClient } from 'masto';
 import { readFile, writeFile } from 'fs/promises';
-import { SHA256Hash } from '@sohailalam2/abu';
 import * as core from '@actions/core';
 import mkdirp from 'mkdirp';
 import { type FeedEntry, read } from '@extractus/feed-extractor';
+import crypto from 'crypto';
+
+function sha256(data: string): string {
+  return crypto.createHash('sha256').update(data, 'utf-8').digest('hex')
+}
 
 async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]): Promise<void> {
   try {
@@ -30,7 +34,7 @@ async function postItems(
     // Add new items to cache
     for (const item of rss) {
       try {
-        const hash = <string>new SHA256Hash().hash(<string>item.link);
+        const hash = sha256(<string>item.link);
         core.debug(`Adding ${item.title} with hash ${hash} to cache`);
 
         // add the item to the cache
@@ -58,7 +62,7 @@ async function postItems(
   // post the new items
   for (const item of rss) {
     try {
-      const hash = <string>new SHA256Hash().hash(<string>item.link);
+      const hash = sha256(<string>item.link);
       core.debug(`Posting ${item.title} with hash ${hash}`);
 
       // post the item
@@ -79,7 +83,7 @@ async function postItems(
 async function filterCachedItems(rss: FeedEntry[], cache: string[]): Promise<FeedEntry[]> {
   if (cache.length) {
     rss = rss?.filter(item => {
-      const hash = <string>new SHA256Hash().hash(<string>item.link);
+      const hash = sha256(<string>item.link);
       return !cache.includes(hash);
     });
   }
