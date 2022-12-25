@@ -29,7 +29,7 @@
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
-    "esbuild": "^0.15.14",
+    "esbuild": "^0.16.0",
     "esbuild-plugin-clean": "^0.9.0",
     "esbuild-plugin-copy-file": "^0.0.2",
     "esbuild-plugin-fileloc": "^0.0.6",
