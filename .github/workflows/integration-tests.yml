@@ -6,13 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generate cache key
-        uses: actions/github-script@v6
+        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6
         id: generate-key
         with:
           script: |
             core.setOutput('cache-key', new Date().valueOf())
       - name: Retrieve cache
-        uses: actions/cache@v3
+        uses: actions/cache@4723a57e26efda3a62cbde1812113b730952852d # v3
         with:
           path: ${{ github.workspace }}/mastofeedbot
           key: feed-cache-${{ steps.generate-key.outputs.cache-key }}
