@@ -156,7 +156,7 @@ export async function main(): Promise<void> {
 
   // post the new items
   const statusTemplate = Handlebars.compile(template);
-  await postItems(apiEndpoint, apiToken, feedData, entries, statusTemplate, statusVisibility, dryRun, sensitive, cache);
+  await postItems(apiEndpoint, apiToken, feedData, filteredEntries, statusTemplate, statusVisibility, dryRun, sensitive, cache);
 
   // write the cache
   await writeCache(cacheFile, cacheLimit, cache);
