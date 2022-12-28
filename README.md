@@ -43,6 +43,8 @@ jobs:
         with:
           # This is the RSS feed you want to publish
           rss-feed: https://www.githubstatus.com/history.rss
+          # Template of status posted to Mastodon (Handlebars)
+          template: '{{item.title}} {{item.link}}'
           # Visibility of the posted status (public | unlisted | private | direct)
           status-visibility: public
           # Mark Mastodon status as sensitive content
@@ -56,3 +58,28 @@ jobs:
 ```
 
 5. Commit and publish your changes.
+
+## Status template
+
+The status template (`status-template`) is using [Handlebars](https://handlebarsjs.com/) as template engine.
+
+The action is passing in an instance of `FeedData` (field `feedData`) and the current `FeedEntry` (field `item`) into the template:
+
+```typescript
+export interface FeedEntry {
+  link?: string;
+  title?: string;
+  description?: string;
+  published?: Date;
+}
+
+export interface FeedData {
+  link?: string;
+  title?: string;
+  description?: string;
+  generator?: string;
+  language?: string;
+  published?: Date;
+  entries?: Array<FeedEntry>;
+}
+```
