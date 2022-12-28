@@ -2,8 +2,9 @@ import { login, StatusVisibility, type MastoClient } from 'masto';
 import { readFile, writeFile } from 'fs/promises';
 import * as core from '@actions/core';
 import mkdirp from 'mkdirp';
-import { type FeedEntry, read } from '@extractus/feed-extractor';
+import { type FeedEntry, FeedData, read } from '@extractus/feed-extractor';
 import crypto from 'crypto';
+import Handlebars from "handlebars";
 
 function sha256(data: string): string {
   return crypto.createHash('sha256').update(data, 'utf-8').digest('hex')
@@ -28,11 +29,18 @@ async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]
 }
 
 async function postItems(
-  apiEndpoint: string, apiToken: string, rss: FeedEntry[], 
-  visibility: StatusVisibility, dryRun: boolean, sensitive: boolean, cache: string[]) {
+  apiEndpoint: string,
+  apiToken: string,
+  feedData: FeedData | undefined,
+  entries: FeedEntry[], 
+  statusTemplate: HandlebarsTemplateDelegate<any>,
+  visibility: StatusVisibility,
+  dryRun: boolean,
+  sensitive: boolean,
+  cache: string[]) {
   if (dryRun) {
     // Add new items to cache
-    for (const item of rss) {
+    for (const item of entries) {
       try {
         const hash = sha256(<string>item.link);
         core.debug(`Adding ${item.title} with hash ${hash} to cache`);
@@ -60,14 +68,14 @@ async function postItems(
   }
 
   // post the new items
-  for (const item of rss) {
+  for (const item of entries) {
     try {
       const hash = sha256(<string>item.link);
       core.debug(`Posting ${item.title} with hash ${hash}`);
 
       // post the item
       const res = await masto.statuses.create({
-        status: `${item.title} ${item.link}`,
+        status: statusTemplate({ feedData, item }),
         visibility,
         sensitive
       }, hash);
@@ -92,11 +100,11 @@ async function filterCachedItems(rss: FeedEntry[], cache: string[]): Promise<Fee
   return rss;
 }
 
-async function getRss(rssFeed: string): Promise<FeedEntry[] | void> {
-  let rss: FeedEntry[];
+async function getRss(rssFeed: string): Promise<FeedData | undefined> {
+  let rss: FeedData;
   try {
-    rss = <FeedEntry[]>(await read(rssFeed)).entries;
-    core.debug(JSON.stringify(`Pre-filter feed items:\n\n${JSON.stringify(rss, null, 2)}`));
+    rss = <FeedData>(await read(rssFeed));
+    core.debug(JSON.stringify(`Pre-filter feed items:\n\n${JSON.stringify(rss.entries, null, 2)}`));
     return rss;
   } catch (e) {
     core.setFailed(`Failed to parse RSS feed: ${(<Error>e).message}`);
@@ -129,22 +137,26 @@ export async function main(): Promise<void> {
   core.debug(`cacheLimit: ${cacheLimit}`);
   const statusVisibility: StatusVisibility = <StatusVisibility>core.getInput('status-visibility', { trimWhitespace: true });
   core.debug(`statusVisibility: ${statusVisibility}`);
+  const template: string = core.getInput('template');
+  core.debug(`template: ${template}`);
   const dryRun: boolean = core.getBooleanInput('dry-run');
   core.debug(`dryRun: ${dryRun}`);
   const sensitive: boolean = core.getBooleanInput('sensitive');
   core.debug(`sensitive: ${sensitive}`);
 
   // get the rss feed
-  let rss = await getRss(rssFeed);
+  const feedData: FeedData | undefined = await getRss(rssFeed);
+  const entries: FeedEntry[] = feedData?.entries ?? [];
 
   // get the cache
   const cache = await getCache(cacheFile);
 
   // filter out the cached items
-  rss = await filterCachedItems(<FeedEntry[]>rss, cache);
+  const filteredEntries: FeedEntry[] = await filterCachedItems(entries, cache);
 
   // post the new items
-  await postItems(apiEndpoint, apiToken, <FeedEntry[]>rss, statusVisibility, dryRun, sensitive, cache);
+  const statusTemplate = Handlebars.compile(template);
+  await postItems(apiEndpoint, apiToken, feedData, entries, statusTemplate, statusVisibility, dryRun, sensitive, cache);
 
   // write the cache
   await writeCache(cacheFile, cacheLimit, cache);

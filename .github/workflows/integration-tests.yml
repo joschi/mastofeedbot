@@ -43,7 +43,7 @@ jobs:
         uses: './'
         with:
           # This is the RSS feed you want to publish
-          rss-feed: 'https://githubraw.com/joschi/mastofeedbot/main/tests/simple.xml'
+          rss-feed: 'https://githubraw.com/joschi/mastofeedbot/main/tests/simple-no-cache.xml'
           # Visibility of the posted status (public | unlisted | private | direct)
           status-visibility: private
           dry-run: false
@@ -83,11 +83,35 @@ jobs:
         uses: './'
         with:
           # This is the RSS feed you want to publish
-          rss-feed: 'https://githubraw.com/joschi/mastofeedbot/main/tests/simple.xml'
+          rss-feed: 'https://githubraw.com/joschi/mastofeedbot/main/tests/simple-sensitive.xml'
           # Visibility of the posted status (public | unlisted | private | direct)
           status-visibility: unlisted
           # Mark Mastodon status as sensitive content
           sensitive: true
+          # This is your instance address
+          api-endpoint: https://social.dev-wiki.de/
+          # This is the secret you created earlier
+          api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          # This is a path to the cache file, using the above cache path
+          cache-file: ${{ github.workspace }}/mastofeedbot/cache.json
+
+  simple-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
+      - name: Run action
+        uses: './'
+        with:
+          # This is the RSS feed you want to publish
+          rss-feed: 'https://githubraw.com/joschi/mastofeedbot/main/tests/simple-template.xml'
+          # Visibility of the posted status (public | unlisted | private | direct)
+          status-visibility: unlisted
+          # Template of status posted to Mastodon (Handlebars)
+          template: |
+            {{feedData.title}}: {{item.title}}
+
+            {{item.link}}
           # This is your instance address
           api-endpoint: https://social.dev-wiki.de/
           # This is the secret you created earlier
