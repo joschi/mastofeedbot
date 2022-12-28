@@ -45,6 +45,8 @@ jobs:
           rss-feed: https://www.githubstatus.com/history.rss
           # Visibility of the posted status (public | unlisted | private | direct)
           status-visibility: public
+          # Mark Mastodon status as sensitive content
+          sensitive: false
           # This is your instance address
           api-endpoint: https://mastodon.social
           # This is the secret you created earlier

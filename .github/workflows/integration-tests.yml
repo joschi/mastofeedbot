@@ -53,6 +53,7 @@ jobs:
           api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           # This is a path to the cache file, using the above cache path
           cache-file: ${{ github.workspace }}/mastofeedbot/cache.json
+
   simple-dry-run:
     runs-on: ubuntu-latest
     steps:
@@ -66,6 +67,27 @@ jobs:
           # Visibility of the posted status (public | unlisted | private | direct)
           status-visibility: unlisted
           dry-run: true
+          # This is your instance address
+          api-endpoint: https://social.dev-wiki.de/
+          # This is the secret you created earlier
+          api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+          # This is a path to the cache file, using the above cache path
+          cache-file: ${{ github.workspace }}/mastofeedbot/cache.json
+
+  simple-sensitive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3
+      - name: Run action
+        uses: './'
+        with:
+          # This is the RSS feed you want to publish
+          rss-feed: 'https://githubraw.com/joschi/mastofeedbot/main/tests/simple.xml'
+          # Visibility of the posted status (public | unlisted | private | direct)
+          status-visibility: unlisted
+          # Mark Mastodon status as sensitive content
+          sensitive: true
           # This is your instance address
           api-endpoint: https://social.dev-wiki.de/
           # This is the secret you created earlier

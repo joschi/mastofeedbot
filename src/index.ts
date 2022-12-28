@@ -29,7 +29,7 @@ async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]
 
 async function postItems(
   apiEndpoint: string, apiToken: string, rss: FeedEntry[], 
-  visibility: StatusVisibility, dryRun: boolean, cache: string[]) {
+  visibility: StatusVisibility, dryRun: boolean, sensitive: boolean, cache: string[]) {
   if (dryRun) {
     // Add new items to cache
     for (const item of rss) {
@@ -69,6 +69,7 @@ async function postItems(
       const res = await masto.statuses.create({
         status: `${item.title} ${item.link}`,
         visibility,
+        sensitive
       }, hash);
       core.debug(`Response:\n\n${JSON.stringify(res, null, 2)}`);
 
@@ -130,6 +131,8 @@ export async function main(): Promise<void> {
   core.debug(`statusVisibility: ${statusVisibility}`);
   const dryRun: boolean = core.getBooleanInput('dry-run');
   core.debug(`dryRun: ${dryRun}`);
+  const sensitive: boolean = core.getBooleanInput('sensitive');
+  core.debug(`sensitive: ${sensitive}`);
 
   // get the rss feed
   let rss = await getRss(rssFeed);
@@ -141,7 +144,7 @@ export async function main(): Promise<void> {
   rss = await filterCachedItems(<FeedEntry[]>rss, cache);
 
   // post the new items
-  await postItems(apiEndpoint, apiToken, <FeedEntry[]>rss, statusVisibility, dryRun, cache);
+  await postItems(apiEndpoint, apiToken, <FeedEntry[]>rss, statusVisibility, dryRun, sensitive, cache);
 
   // write the cache
   await writeCache(cacheFile, cacheLimit, cache);
