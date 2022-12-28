@@ -15,7 +15,7 @@
       <description>Image description.</description>
     </image>
     <item>
-      <link>https://github.com/joschi/mastofeedbot/pull/1#no-cache</link>
+      <link>https://github.com/joschi/mastofeedbot/pull/1?test=no-cache</link>
       <guid isPermaLink="false">44aefc891f5b1f96ae7393f3d1613254eae9c23b</guid>
       <title>Item 1 Title</title>
       <description>Item 1 Description</description>
@@ -24,7 +24,7 @@
       <author>author.item1@example.com (Author Item 1)</author>
     </item>
     <item>
-      <link>https://github.com/joschi/mastofeedbot/pull/2#no-cache</link>
+      <link>https://github.com/joschi/mastofeedbot/pull/2?test=no-cache</link>
       <guid isPermaLink="false">55a26da9618a994e56c845306bd38641f58220af</guid>
       <title>Item 2 Title</title>
       <description>Item 2 Description</description>
