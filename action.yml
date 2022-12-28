@@ -16,6 +16,10 @@ inputs:
     description: 'Only fetch RSS feed and update cache but skip posting to Mastodon.'
     required: false
     default: 'false'
+  sensitive:
+    description: 'Mark Mastodon status as sensitive content.'
+    required: false
+    default: 'false'
   cache-file:
     description: 'Cache file'
     required: true
