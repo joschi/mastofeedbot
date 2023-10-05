@@ -21,7 +21,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node --es-module-specifier-resolution node esbuild.js"
+    "build": "node esbuild.js"
   },
   "devDependencies": {
     "@types/feedparser": "^2.2.5",
