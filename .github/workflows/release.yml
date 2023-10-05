@@ -28,12 +28,10 @@ jobs:
           diff-search: true
 
       - name: Create release
-        uses: 'zendesk/action-create-release@ed250bfbb4e67d4ea4ab3c5d0cd531661463e168' # v2
+        uses: 'ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5' # v1
         if: ${{ steps.check.outputs.changed == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.check.outputs.version}}
-          release_name: v${{ steps.check.outputs.version}}
-          draft: false
-          prerelease: false
+          tag: v${{ steps.check.outputs.version}}
+          name: v${{ steps.check.outputs.version}}
