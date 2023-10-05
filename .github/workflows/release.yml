@@ -28,7 +28,7 @@ jobs:
           diff-search: true
 
       - name: Create release
-        uses: 'zendesk/action-create-release@d690a6dcc904617a6ef45f845114e6e3d9f1b0af' # v1
+        uses: 'zendesk/action-create-release@ed250bfbb4e67d4ea4ab3c5d0cd531661463e168' # v2
         if: ${{ steps.check.outputs.changed == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
