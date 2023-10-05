@@ -1,12 +1,12 @@
 {
-  "name": "@selfagency/mastofeedbot",
-  "version": "0.1.3",
+  "name": "@joschi/mastofeedbot",
+  "version": "0.1.4",
   "description": "A bot to syndicate RSS to Mastodon via GitHub Actions",
-  "author": "Daniel Sieradski <daniel@self.agency>",
+  "author": "Jochen Schalanda <jochen+mastofeedbot@schalanda.name>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/selfagency/mastofeedbot.git"
+    "url": "git+https://github.com/joschi/mastofeedbot.git"
   },
   "keywords": [
     "mastodon",
@@ -15,9 +15,9 @@
     "rss"
   ],
   "bugs": {
-    "url": "https://github.com/selfagency/mastofeedbot/issues"
+    "url": "https://github.com/joschi/mastofeedbot/issues"
   },
-  "homepage": "https://github.com/selfagency/mastofeedbot#readme",
+  "homepage": "https://github.com/joschi/mastofeedbot#readme",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
