@@ -1,7 +1,7 @@
 import { mastodon, login } from 'masto';
 import { readFile, writeFile } from 'fs/promises';
 import * as core from '@actions/core';
-import mkdirp from 'mkdirp';
+import { mkdirp } from 'mkdirp';
 import { type FeedEntry, FeedData, read } from '@extractus/feed-extractor';
 import crypto from 'crypto';
 import Handlebars from "handlebars";
