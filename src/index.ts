@@ -1,4 +1,4 @@
-import { login, StatusVisibility, type MastoClient } from 'masto';
+import { mastodon, login } from 'masto';
 import { readFile, writeFile } from 'fs/promises';
 import * as core from '@actions/core';
 import mkdirp from 'mkdirp';
@@ -34,7 +34,7 @@ async function postItems(
   feedData: FeedData | undefined,
   entries: FeedEntry[], 
   statusTemplate: HandlebarsTemplateDelegate<any>,
-  visibility: StatusVisibility,
+  visibility: mastodon.v1.StatusVisibility,
   dryRun: boolean,
   sensitive: boolean,
   cache: string[]) {
@@ -56,7 +56,7 @@ async function postItems(
   }
 
   // authenticate with mastodon
-  let masto: MastoClient;
+  let masto: mastodon.Client;
   try {
     masto = await login({
       url: apiEndpoint,
@@ -74,11 +74,13 @@ async function postItems(
       core.debug(`Posting ${item.title} with hash ${hash}`);
 
       // post the item
-      const res = await masto.statuses.create({
+      const res = await masto.v1.statuses.create({
         status: statusTemplate({ feedData, item }),
         visibility,
         sensitive
-      }, hash);
+      }, {
+        idempotencyKey: hash
+      });
       core.debug(`Response:\n\n${JSON.stringify(res, null, 2)}`);
 
       // add the item to the cache
@@ -135,7 +137,7 @@ export async function main(): Promise<void> {
   core.debug(`cacheFile: ${cacheFile}`);
   const cacheLimit = parseInt(core.getInput('cache-limit'), 10);
   core.debug(`cacheLimit: ${cacheLimit}`);
-  const statusVisibility: StatusVisibility = <StatusVisibility>core.getInput('status-visibility', { trimWhitespace: true });
+  const statusVisibility: mastodon.v1.StatusVisibility = <mastodon.v1.StatusVisibility>core.getInput('status-visibility', { trimWhitespace: true });
   core.debug(`statusVisibility: ${statusVisibility}`);
   const template: string = core.getInput('template');
   core.debug(`template: ${template}`);
