@@ -1,4 +1,4 @@
-import { mastodon, login } from 'masto';
+import { type mastodon, createRestAPIClient } from 'masto';
 import { readFile, writeFile } from 'fs/promises';
 import * as core from '@actions/core';
 import { mkdirp } from 'mkdirp';
@@ -56,9 +56,9 @@ async function postItems(
   }
 
   // authenticate with mastodon
-  let masto: mastodon.Client;
+  let masto: mastodon.rest.Client
   try {
-    masto = await login({
+    masto = createRestAPIClient({
       url: apiEndpoint,
       accessToken: apiToken
     });
@@ -79,7 +79,9 @@ async function postItems(
         visibility,
         sensitive
       }, {
-        idempotencyKey: hash
+        requestInit: {
+          headers: new Headers({ "Idempotency-Key": hash }),
+        },
       });
       core.debug(`Response:\n\n${JSON.stringify(res, null, 2)}`);
 
