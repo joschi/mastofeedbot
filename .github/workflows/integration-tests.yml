@@ -28,7 +28,7 @@ jobs:
           status-visibility: unlisted
           dry-run: false
           # This is your instance address
-          api-endpoint: https://social.dev-wiki.de/
+          api-endpoint: ${{ secrets.MASTODON_ENDPOINT }}
           # This is the secret you created earlier
           api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           # This is a path to the cache file, using the above cache path
@@ -48,7 +48,7 @@ jobs:
           status-visibility: private
           dry-run: false
           # This is your instance address
-          api-endpoint: https://social.dev-wiki.de/
+          api-endpoint: ${{ secrets.MASTODON_ENDPOINT }}
           # This is the secret you created earlier
           api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           # This is a path to the cache file, using the above cache path
@@ -68,7 +68,7 @@ jobs:
           status-visibility: unlisted
           dry-run: true
           # This is your instance address
-          api-endpoint: https://social.dev-wiki.de/
+          api-endpoint: ${{ secrets.MASTODON_ENDPOINT }}
           # This is the secret you created earlier
           api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           # This is a path to the cache file, using the above cache path
@@ -89,7 +89,7 @@ jobs:
           # Mark Mastodon status as sensitive content
           sensitive: true
           # This is your instance address
-          api-endpoint: https://social.dev-wiki.de/
+          api-endpoint: ${{ secrets.MASTODON_ENDPOINT }}
           # This is the secret you created earlier
           api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           # This is a path to the cache file, using the above cache path
@@ -113,7 +113,7 @@ jobs:
 
             {{item.link}}
           # This is your instance address
-          api-endpoint: https://social.dev-wiki.de/
+          api-endpoint: ${{ secrets.MASTODON_ENDPOINT }}
           # This is the secret you created earlier
           api-token: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           # This is a path to the cache file, using the above cache path
