@@ -26,8 +26,8 @@
   "devDependencies": {
     "@types/feedparser": "^2.2.5",
     "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "esbuild": "^0.23.0",
     "esbuild-plugin-clean": "^1.0.1",
     "esbuild-plugin-copy-file": "^0.0.2",
