@@ -1,6 +1,6 @@
 {
   "name": "@joschi/mastofeedbot",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "A bot to syndicate RSS to Mastodon via GitHub Actions",
   "author": "Jochen Schalanda <jochen+mastofeedbot@schalanda.name>",
   "license": "MIT",
