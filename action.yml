@@ -1,5 +1,5 @@
 name: 'Feed to Mastodon'
-author: 'selfagency'
+author: 'joschi'
 description: 'Push ATOM/RSS feed updates to Mastodon via GitHub Actions'
 branding:
   icon: 'rss'
@@ -10,7 +10,6 @@ inputs:
     required: true
   status-visibility:
     description: 'Visibility of the posted status (public | unlisted | private | direct)'
-    required: false
     default: 'public'
   template:
     description: 'Template of status posted to Mastodon (Handlebars)'
@@ -18,18 +17,15 @@ inputs:
     default: '{{item.title}} {{item.link}}'
   dry-run:
     description: 'Only fetch RSS feed and update cache but skip posting to Mastodon.'
-    required: false
     default: 'false'
   sensitive:
     description: 'Mark Mastodon status as sensitive content.'
-    required: false
     default: 'false'
   cache-file:
     description: 'Cache file'
     required: true
   cache-limit:
     description: 'Cache limit'
-    required: false
     default: '100'
   api-endpoint:
     description: 'Mastodon API endpoint'
@@ -37,6 +33,10 @@ inputs:
   api-token:
     description: 'Mastodon access token'
     required: true
+  initial-post-limit:
+    description: 'The maximum number of posts created on the first run, if no cache file exists (default: unlimited)'
+  post-limit:
+    description: 'The maximum number of posts created per run (default: unlimited)'
 runs:
   using: 'node20'
   main: 'dist/index.js'
