@@ -98,7 +98,7 @@
     /* Ensure that casing is correct in imports. */
 
     /* Type Checking */
-    "strict": true
+    "strict": true,
     /* Enable all strict type-checking options. */
     // "noImplicitAny": false,
     /* Enable error reporting for expressions and declarations with an implied 'any' type. */
@@ -122,7 +122,7 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    // "skipLibCheck": true
+    "skipLibCheck": true
     /* Skip type checking all .d.ts files. */
   },
   "include": [
