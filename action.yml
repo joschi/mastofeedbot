@@ -38,5 +38,5 @@ inputs:
   post-limit:
     description: 'The maximum number of posts created per run (default: unlimited)'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
