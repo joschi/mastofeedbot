@@ -21,7 +21,8 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "node esbuild.js"
+    "build": "node esbuild.js",
+    "test": "node --test --experimental-strip-types tests/*.test.ts"
   },
   "devDependencies": {
     "@types/feedparser": "^2.2.5",
