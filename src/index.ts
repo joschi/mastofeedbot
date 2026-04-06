@@ -1,17 +1,18 @@
 import { createRestAPIClient, type mastodon } from 'masto';
 import { readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import * as core from '@actions/core';
 import { mkdirp } from 'mkdirp';
-import { FeedData, type FeedEntry, read } from '@extractus/feed-extractor';
+import { type FeedData, type FeedEntry, extract } from '@extractus/feed-extractor';
 import crypto from 'crypto';
 import Handlebars from 'handlebars';
 
-function sha256(data: string): string {
+export function sha256(data: string): string {
   return crypto.createHash('sha256').update(data, 'utf-8').digest('hex');
 }
 
-async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]): Promise<void> {
+export async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]): Promise<void> {
   try {
     // limit the cache
     if (cache.length > cacheLimit) {
@@ -25,7 +26,7 @@ async function writeCache(cacheFile: string, cacheLimit: number, cache: string[]
     // write the cache
     await writeFile(cacheFile, JSON.stringify(cache));
   } catch (e) {
-    core.setFailed(`Failed to write cache file: ${(<Error>e).message}`);
+    core.setFailed(`Failed to write cache file: ${(e as Error).message}`);
   }
 }
 
@@ -44,13 +45,13 @@ async function postItems(
     // Add new items to cache
     for (const item of entries) {
       try {
-        const hash = sha256(<string>item.link);
+        const hash = sha256(item.link as string);
         core.debug(`Adding ${item.title} with hash ${hash} to cache`);
 
         // add the item to the cache
         cache.push(hash);
       } catch (e) {
-        core.setFailed(`Failed to ad item to cache: ${(<Error>e).message}`);
+        core.setFailed(`Failed to ad item to cache: ${(e as Error).message}`);
       }
     }
 
@@ -65,7 +66,7 @@ async function postItems(
       accessToken: apiToken
     });
   } catch (e) {
-    core.setFailed(`Failed to authenticate with Mastodon: ${(<Error>e).message}`);
+    core.setFailed(`Failed to authenticate with Mastodon: ${(e as Error).message}`);
     return;
   }
 
@@ -73,7 +74,7 @@ async function postItems(
   let postedItems: number = 0;
   for (const item of entries) {
     try {
-      const hash = sha256(<string>item.link);
+      const hash = sha256(item.link as string);
       core.debug(`Posting ${item.title} with hash ${hash}`);
 
       if (postedItems >= limit) {
@@ -97,16 +98,16 @@ async function postItems(
       // add the item to the cache
       cache.push(hash);
     } catch (e) {
-      core.setFailed(`Failed to post item: ${(<Error>e).message}`);
+      core.setFailed(`Failed to post item: ${(e as Error).message}`);
     }
   }
 }
 
-async function filterCachedItems(rss: FeedEntry[], cache: string[]): Promise<FeedEntry[]> {
+export async function filterCachedItems(rss: FeedEntry[], cache: string[]): Promise<FeedEntry[]> {
   if (cache.length) {
     rss = rss
       ?.filter(item => {
-        const hash = sha256(<string>item.link);
+        const hash = sha256(item.link as string);
         return !cache.includes(hash);
       })
       ?.sort((a, b) => a.published?.localeCompare(b.published || '') || NaN);
@@ -115,18 +116,18 @@ async function filterCachedItems(rss: FeedEntry[], cache: string[]): Promise<Fee
   return rss;
 }
 
-async function getRss(rssFeed: string): Promise<FeedData | undefined> {
+export async function getRss(rssFeed: string): Promise<FeedData | undefined> {
   let rss: FeedData;
   try {
-    rss = <FeedData>(await read(rssFeed));
+    rss = (await extract(rssFeed)) as FeedData;
     core.debug(JSON.stringify(`Pre-filter feed items:\n\n${JSON.stringify(rss.entries, null, 2)}`));
     return rss;
   } catch (e) {
-    core.setFailed(`Failed to parse RSS feed: ${(<Error>e).message}`);
+    core.setFailed(`Failed to parse RSS feed: ${(e as Error).message}`);
   }
 }
 
-async function getCache(cacheFile: string): Promise<string[]> {
+export async function getCache(cacheFile: string): Promise<string[]> {
   let cache: string[] = [];
   try {
     cache = JSON.parse(await readFile(cacheFile, 'utf-8'));
@@ -150,7 +151,7 @@ export async function main(): Promise<void> {
   core.debug(`cacheFile: ${cacheFile}`);
   const cacheLimit = parseInt(core.getInput('cache-limit'), 10);
   core.debug(`cacheLimit: ${cacheLimit}`);
-  const statusVisibility: mastodon.v1.StatusVisibility = <mastodon.v1.StatusVisibility>core.getInput('status-visibility', { trimWhitespace: true });
+  const statusVisibility: mastodon.v1.StatusVisibility = core.getInput('status-visibility', { trimWhitespace: true }) as mastodon.v1.StatusVisibility;
   core.debug(`statusVisibility: ${statusVisibility}`);
   const template: string = core.getInput('template', { required: true });
   core.debug(`template: ${template}`);
@@ -205,4 +206,6 @@ export async function main(): Promise<void> {
   await writeCache(cacheFile, cacheLimit, cache);
 }
 
-(async () => await main())();
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  (async () => await main())();
+}
