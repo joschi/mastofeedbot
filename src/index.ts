@@ -35,6 +35,7 @@ async function postItems(
   apiToken: string,
   feedData: FeedData | undefined,
   entries: FeedEntry[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   statusTemplate: HandlebarsTemplateDelegate<any>,
   visibility: mastodon.v1.StatusVisibility,
   dryRun: boolean,
@@ -133,7 +134,7 @@ export async function getCache(cacheFile: string): Promise<string[]> {
     cache = JSON.parse(await readFile(cacheFile, 'utf-8'));
     core.debug(`Cache: ${JSON.stringify(cache)}`);
     return cache;
-  } catch (e) {
+  } catch {
     core.notice(`Cache file not found. Creating new cache file at ${cacheFile}.`);
     return cache;
   }
