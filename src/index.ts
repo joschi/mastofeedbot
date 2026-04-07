@@ -117,10 +117,18 @@ export async function filterCachedItems(rss: FeedEntry[], cache: string[]): Prom
   return rss;
 }
 
-export async function getRss(rssFeed: string): Promise<FeedData | undefined> {
+export async function getRss(rssFeed: string, xmlEntityExpansionLimit?: number): Promise<FeedData | undefined> {
   let rss: FeedData;
   try {
-    rss = (await extract(rssFeed)) as FeedData;
+    let options = {};
+    if (xmlEntityExpansionLimit !== undefined && !isNaN(xmlEntityExpansionLimit)) {
+      if (xmlEntityExpansionLimit === 0) {
+        options = { xmlParserOptions: { processEntities: false } };
+      } else {
+        options = { xmlParserOptions: { processEntities: { maxTotalExpansions: xmlEntityExpansionLimit } } };
+      }
+    }
+    rss = (await extract(rssFeed, options)) as FeedData;
     core.debug(JSON.stringify(`Pre-filter feed items:\n\n${JSON.stringify(rss.entries, null, 2)}`));
     return rss;
   } catch (e) {
@@ -164,6 +172,8 @@ export async function main(): Promise<void> {
   core.debug(`initialPostLimit: ${initialPostLimit}`);
   const postLimit = parseInt(core.getInput('post-limit'), 10);
   core.debug(`postLimit: ${postLimit}`);
+  const xmlEntityExpansionLimit = parseInt(core.getInput('xml-entity-expansion-limit'), 10);
+  core.debug(`xmlEntityExpansionLimit: ${xmlEntityExpansionLimit}`);
 
   if (initialPostLimit > cacheLimit) {
     core.warning('initial-post-limit is greater than cache-limit, this might lead to unexpected results');
@@ -173,7 +183,7 @@ export async function main(): Promise<void> {
   }
 
   // get the rss feed
-  const feedData: FeedData | undefined = await getRss(rssFeed);
+  const feedData: FeedData | undefined = await getRss(rssFeed, xmlEntityExpansionLimit);
   const entries: FeedEntry[] = feedData?.entries ?? [];
 
   let limit: number = postLimit;
