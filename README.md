@@ -78,7 +78,7 @@ Masto Feed Bot is a GitHub Action that posts RSS/ATOM feeds to Mastodon via GitH
 | `cache-limit` | | `100` | Maximum number of items to keep in the cache |
 | `initial-post-limit` | | unlimited | Maximum number of posts created on the first run (when no cache file exists) |
 | `post-limit` | | unlimited | Maximum number of posts created per run |
-| `entity-expansion-limit` | | `1000` | Maximum number of entity expansions allowed when parsing the RSS feed XML |
+| `xml-entity-expansion-limit` | | `10000` | Maximum number of entity expansions allowed when parsing the RSS feed XML. Set to `0` to disable entity expansion processing entirely. |
 
 ## Status template
 
