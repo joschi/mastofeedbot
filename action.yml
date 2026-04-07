@@ -37,6 +37,9 @@ inputs:
     description: 'The maximum number of posts created on the first run, if no cache file exists (default: unlimited)'
   post-limit:
     description: 'The maximum number of posts created per run (default: unlimited)'
+  entity-expansion-limit:
+    description: 'Maximum number of entity expansions allowed when parsing the RSS feed XML (default: 1000)'
+    default: '1000'
 runs:
   using: 'node24'
   main: 'dist/index.js'

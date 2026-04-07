@@ -153,3 +153,20 @@ describe('writeCache', () => {
     }
   });
 });
+
+describe('entity expansion limit', () => {
+  test('fails when entity expansion limit is exceeded', () => {
+    const xml = readFileSync(join(__dirname, 'entities.xml'), 'utf-8');
+    assert.throws(
+      () => extractFromXml(xml, { xmlParserOptions: { processEntities: { maxTotalExpansions: 5 } } }),
+      /Entity expansion limit exceeded/
+    );
+  });
+
+  test('succeeds when entity expansion limit is raised', () => {
+    const xml = readFileSync(join(__dirname, 'entities.xml'), 'utf-8');
+    const result = extractFromXml(xml, { xmlParserOptions: { processEntities: { maxTotalExpansions: 20 } } });
+    assert.ok(result);
+    assert.strictEqual(result.entries?.length, 1);
+  });
+});

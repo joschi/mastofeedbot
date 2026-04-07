@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rss [
+  <!ENTITY e1 "entity1value">
+  <!ENTITY e2 "entity2value">
+  <!ENTITY e3 "entity3value">
+  <!ENTITY e4 "entity4value">
+  <!ENTITY e5 "entity5value">
+  <!ENTITY e6 "entity6value">
+  <!ENTITY e7 "entity7value">
+  <!ENTITY e8 "entity8value">
+  <!ENTITY e9 "entity9value">
+  <!ENTITY e10 "entity10value">
+]>
+<rss version="2.0">
+  <channel>
+    <link>https://example.com/feed</link>
+    <title>Test Feed</title>
+    <description>Entities: &e1; &e2; &e3; &e4; &e5; &e6; &e7; &e8; &e9; &e10;</description>
+    <item>
+      <link>https://example.com/1</link>
+      <title>Item 1</title>
+      <description>More entities: &e1; &e2; &e3; &e4; &e5; &e6; &e7; &e8; &e9; &e10;</description>
+      <pubDate>Thu, 15 Dec 2022 19:02:13 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
